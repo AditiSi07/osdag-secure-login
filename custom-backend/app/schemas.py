@@ -26,3 +26,19 @@ class ProfileResponse(BaseModel):
     id: str
     email: str
     profile: dict
+
+class FileItem(BaseModel):
+    id: str
+    ownerId: str
+    fileName: str
+    mimeType: str
+    sizeBytes: int
+    uploadedAt: str
+
+
+class FilesListResponse(BaseModel):
+    files: list[FileItem]
+
+
+class FileDetailResponse(BaseModel):
+    file: FileItem

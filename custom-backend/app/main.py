@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import auth, users
+from app.routes import auth, users, files
 app = FastAPI(title="Secure Login System - Custom Backend")
 
 app.add_middleware(
@@ -14,6 +14,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(files.router)
 
 @app.get("/")
 def health():
