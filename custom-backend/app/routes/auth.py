@@ -2,6 +2,8 @@ import hashlib
 import secrets
 from datetime import datetime, timedelta
 
+from fastapi import Header
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session as DBSession
 from passlib.context import CryptContext
@@ -78,3 +80,17 @@ def login(payload: LoginRequest, db: DBSession = Depends(get_db)):
         token=raw_token,
         user=LoginUserInfo(id=str(user.id), email=user.email),
     )
+@router.post("/logout")
+def logout(authorization: str = Header(default=None), db: DBSession = Depends(get_db)):
+    if not authorization or not authorization.startswith("Bearer "):
+        return {"message": "Logged out"}
+
+    raw_token = authorization.removeprefix("Bearer ").strip()
+    token_hash = hash_token(raw_token)
+
+    session = db.query(Session).filter(Session.token_hash == token_hash).first()
+    if session and session.revoked_at is None:
+        session.revoked_at = datetime.utcnow()
+        db.commit()
+
+    return {"message": "Logged out"}
