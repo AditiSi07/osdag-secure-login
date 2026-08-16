@@ -1,0 +1,21 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.routes import auth
+
+app = FastAPI(title="Secure Login System - Custom Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # fine for local dev/screening task; would be locked down for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth.router)
+
+
+@app.get("/")
+def health():
+    return {"status": "ok"}
