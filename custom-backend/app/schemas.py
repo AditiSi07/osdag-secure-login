@@ -22,3 +22,7 @@ class LoginUserInfo(BaseModel):
 class LoginResponse(BaseModel):
     token: str
     user: LoginUserInfo
+class ProfileResponse(BaseModel):
+    id: str
+    email: str
+    profile: dict
